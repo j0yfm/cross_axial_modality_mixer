@@ -1,6 +1,6 @@
 {
   "name": "cross_axial_modality_mixer",
-  "short_name": "cross_axial_modality_mixer",
+  "short_name": "x_a_2m",
   "description": "Granular sampler with an audio-reactive dot-noise video, by joyfm.",
   "start_url": "./",
   "scope": "./",
