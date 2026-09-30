@@ -1,6 +1,6 @@
 // cross_axial_modality_mixer service worker: app files cached for offline use, fonts cached as they load.
-const VERSION = 'cross-axial-v1';
-const APP = ['./', 'index.html', 'manifest.webmanifest', 'skin_bg.jpg', 'wires.png',
+const VERSION = 'cross-axial-v2';
+const APP = ['./', 'index.html', 'manifest.webmanifest', 'skin_bg.jpg', 'skin_mask.png', 'backdrop.jpg', 'backdrop_wide.jpg', 'wires.png',
   'knob_rate.png', 'knob_fbk.png', 'knob_pre.png', 'knob_decay.png',
   'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'apple-touch-icon.png'];
 

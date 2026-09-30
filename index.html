@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="theme-color" content="#fdfdfc">
+<meta name="theme-color" content="#141210">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -50,8 +50,13 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);overflow:h
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-appearance:none;appearance:none}
 button:focus-visible,input:focus-visible,.slider:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .hit:focus-visible{outline-color:#111}
-.stage-wrap{height:100%;display:grid;place-items:center;background:var(--paper)}
-.stage{position:relative;width:min(100vw,calc(100vh * 1206/2144));width:min(100vw,calc(100dvh * 1206/2144));aspect-ratio:1206/2144;max-width:100%;background:var(--paper) url(skin_bg.jpg) center/100% 100% no-repeat;overflow:hidden;touch-action:none}
+.stage-wrap{position:relative;height:100%;overflow:hidden;background:#141210 url(backdrop_wide.jpg) center/cover}
+/* Fit the collage itself (skin px 14–1172 × 276–2115), not the whole skin, and centre it */
+.stage{--s:min(calc(90vh / 1839),calc(96vw / 1158));--s:min(calc(90dvh / 1839),calc(96vw / 1158));position:absolute;left:50%;top:50%;width:calc(var(--s) * 1206);aspect-ratio:1206/2144;transform:translate(-50%,-50%) translate(calc(var(--s) * 10),calc(var(--s) * -123.5));isolation:isolate;touch-action:none}
+.backdrop{position:absolute;left:-4.966%;top:.02%;width:109.89%;height:110.351%;z-index:-2;pointer-events:none;background:url(backdrop.jpg) center/100% 100% no-repeat;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 94%,transparent);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 94%,transparent);mask-composite:intersect}
+.skin{position:absolute;inset:0;z-index:-1;pointer-events:none;background:url(skin_bg.jpg) center/100% 100% no-repeat;-webkit-mask:url(skin_mask.png) center/100% 100% no-repeat;mask:url(skin_mask.png) center/100% 100% no-repeat}
 .hit{-webkit-touch-callout:none;position:absolute;display:block;padding:0;border-radius:12%;transition:background .08s}
 .hit:active,.hit.down{background:rgba(0,0,0,.14)}
 .hit.round{border-radius:50%}
@@ -111,6 +116,7 @@ button:focus-visible,input:focus-visible,.slider:focus-visible{outline:2px solid
 <body>
 <div class="stage-wrap">
   <main class="stage" aria-label="cross_axial_modality_mixer">
+    <div class="backdrop" aria-hidden="true"></div><div class="skin" aria-hidden="true"></div>
     <canvas id="lcd" width="472" height="273" aria-label="Sample display. Tap the bottom row to change view."></canvas>
     <button class="hit round" id="play" style="left:11.609%;top:27.192%;width:10.779%;height:6.063%" aria-label="Start audio"></button>
     <button class="hit key" id="keyA" data-v="0" style="left:68.159%;top:17.024%;width:10.614%;height:6.063%" aria-label="Sample A: tap to load, hold to mute"></button>
