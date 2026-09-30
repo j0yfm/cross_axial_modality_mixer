@@ -1,4 +1,4 @@
-# Grain Field
+# MAX_dot_GRAIN
 
 A granular sampler and audio-reactive video instrument by joyfm, built to run on a dedicated tablet.
 

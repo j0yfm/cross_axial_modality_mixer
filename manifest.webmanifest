@@ -1,6 +1,6 @@
 {
-  "name": "Grain Field",
-  "short_name": "Grain Field",
+  "name": "MAX_dot_GRAIN",
+  "short_name": "MAX_dot_GRAIN",
   "description": "Granular sampler with an audio-reactive dot-noise video, by joyfm.",
   "start_url": "./",
   "scope": "./",
