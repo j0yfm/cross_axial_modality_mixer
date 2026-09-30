@@ -1,4 +1,4 @@
-# MAX_dot_GRAIN
+# cross_axial_modality_mixer
 
 A granular sampler and audio-reactive video instrument by joyfm, built to run on a dedicated tablet.
 

@@ -1,5 +1,5 @@
-// MAX_dot_GRAIN service worker: app files cached for offline use, fonts cached as they load.
-const VERSION = 'max-dot-grain-v1';
+// cross_axial_modality_mixer service worker: app files cached for offline use, fonts cached as they load.
+const VERSION = 'cross-axial-v1';
 const APP = ['./', 'index.html', 'manifest.webmanifest', 'skin_bg.jpg', 'wires.png',
   'knob_rate.png', 'knob_fbk.png', 'knob_pre.png', 'knob_decay.png',
   'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'apple-touch-icon.png'];

@@ -1,6 +1,6 @@
 {
-  "name": "MAX_dot_GRAIN",
-  "short_name": "MAX_dot_GRAIN",
+  "name": "cross_axial_modality_mixer",
+  "short_name": "cross_axial_modality_mixer",
   "description": "Granular sampler with an audio-reactive dot-noise video, by joyfm.",
   "start_url": "./",
   "scope": "./",
