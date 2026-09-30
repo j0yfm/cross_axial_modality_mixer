@@ -52,7 +52,7 @@ button:focus-visible,input:focus-visible,.slider:focus-visible{outline:2px solid
 .hit:focus-visible{outline-color:#111}
 .stage-wrap{position:relative;height:100%;overflow:hidden;background:#141210 url(backdrop_wide.jpg) center/cover}
 /* Fit the collage itself (skin px 14–1172 × 276–2115), not the whole skin, and centre it */
-.stage{--s:min(calc(90vh / 1839),calc(96vw / 1158));--s:min(calc(90dvh / 1839),calc(96vw / 1158));position:absolute;left:50%;top:50%;width:calc(var(--s) * 1206);aspect-ratio:1206/2144;transform:translate(-50%,-50%) translate(calc(var(--s) * 10),calc(var(--s) * -123.5));isolation:isolate;touch-action:none}
+.stage{--s:min(calc(90vh / 1839),calc(96vw / 1162));--s:min(calc(90dvh / 1839),calc(96vw / 1162));position:absolute;left:50%;top:50%;width:calc(var(--s) * 1206);aspect-ratio:1206/2144;transform:translate(-50%,-50%) translate(calc(var(--s) * 12),calc(var(--s) * -123.5));isolation:isolate;touch-action:none}
 .backdrop{position:absolute;left:-4.966%;top:.02%;width:109.89%;height:110.351%;z-index:-2;pointer-events:none;background:url(backdrop.jpg) center/100% 100% no-repeat;
   -webkit-mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 94%,transparent);-webkit-mask-composite:source-in;
   mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 94%,transparent);mask-composite:intersect}
@@ -63,6 +63,7 @@ button:focus-visible,input:focus-visible,.slider:focus-visible{outline:2px solid
 .key.muted{background:rgba(20,16,10,.55)}
 .key.muted::after{content:"MUTE";position:absolute;left:0;right:0;bottom:8%;text-align:center;font:500 clamp(8px,2.4cqw,15px)/1 var(--sans);letter-spacing:.14em;color:#fff}
 .stage{container-type:inline-size}
+.extras{position:absolute;pointer-events:none;-webkit-user-drag:none}
 .knob{position:absolute;touch-action:none;cursor:ns-resize}
 .knob img{width:100%;height:100%;display:block;pointer-events:none;-webkit-user-drag:none;filter:drop-shadow(0 .6cqw .5cqw rgba(0,0,0,.35))}
 .knob:focus-visible{outline:2px solid #fff;outline-offset:-4px;border-radius:50%}
@@ -123,6 +124,9 @@ button:focus-visible,input:focus-visible,.slider:focus-visible{outline:2px solid
     <button class="hit key" id="keyB" data-v="1" style="left:68.159%;top:23.321%;width:10.614%;height:5.830%" aria-label="Sample B: tap to load, hold to mute"></button>
     <input type="file" id="file0" accept="audio/*,.wav,.wave,.aif,.aiff,.mp3,.m4a,.flac" hidden>
     <input type="file" id="file1" accept="audio/*,.wav,.wave,.aif,.aiff,.mp3,.m4a,.flac" hidden>
+    <img class="extras" src="extras.png" alt="" style="left:0.829%;top:44.543%;width:84.328%;height:14.179%">
+    <div class="knob ring" data-fx="rmMix" tabindex="0" role="slider" aria-label="Ring mod mix" style="left:2.778%;top:48.354%;width:12.214%;height:7.327%"><img src="knob_ring.png" alt=""></div>
+    <div class="knob ring" data-fx="rmFreq" tabindex="0" role="slider" aria-label="Ring mod frequency" style="left:77.405%;top:35.285%;width:17.131%;height:8.456%"><img src="knob_hz.png" alt=""></div>
     <div class="knob" data-fx="dRate" tabindex="0" role="slider" aria-label="Delay rate" style="left:23.964%;top:56.203%;width:20.647%;height:11.614%"><img src="knob_rate.png" alt=""></div>
     <div class="knob" data-fx="dFb" tabindex="0" role="slider" aria-label="Delay feedback" style="left:52.073%;top:55.784%;width:20.896%;height:11.754%"><img src="knob_fbk.png" alt=""></div>
     <div class="knob" data-fx="rPre" tabindex="0" role="slider" aria-label="Reverb pre-delay" style="left:24.793%;top:69.963%;width:19.900%;height:11.147%"><img src="knob_pre.png" alt=""></div>
@@ -258,7 +262,7 @@ const OUT=[
   {k:'rMix',n:'Reverb mix',min:0,max:1,d:.35},
   {k:'vol',n:'Master volume',min:0,max:1,d:.8},
 ];
-const state={v:[{},{}],fx:{dRate:.55,dFb:.4,rDecay:.5,rPre:.2},out:{},on:[true,true]};
+const state={v:[{},{}],fx:{dRate:.55,dFb:.4,rDecay:.5,rPre:.2,rmMix:0,rmFreq:.6},out:{},on:[true,true]};
 PARAMS.forEach(p=>{state.v[0][p.k]=p.d[0];state.v[1][p.k]=p.d[1]});
 OUT.forEach(p=>state.out[p.k]=p.d);
 
@@ -274,12 +278,16 @@ const FXMAP={
   dFb:v=>v*.95,
   rDecay:v=>.3*Math.pow(40,v),               // seconds
   rPre:v=>v*.25,                             // seconds
+  rmFreq:v=>Math.pow(2000,v),                // Hz, 1 Hz (tremolo) to 2 kHz (metallic)
+  rmMix:v=>v,
 };
 const FXFMT={
   dRate:v=>`${Math.round(FXMAP.dRate(v)*1000)} ms`,
   dFb:v=>`${Math.round(v*95)}%`,
   rDecay:v=>`${FXMAP.rDecay(v).toFixed(1)} s`,
   rPre:v=>`${Math.round(FXMAP.rPre(v)*1000)} ms`,
+  rmFreq:v=>{const f=FXMAP.rmFreq(v);return f<10?`${f.toFixed(1)} Hz`:`${Math.round(f)} Hz`},
+  rmMix:v=>`${Math.round(v*100)}%`,
 };
 
 /* ---------- Built-in samples ---------- */
@@ -345,11 +353,17 @@ async function initAudio(){
   const dSend=ac.createGain(), delay=ac.createDelay(2), fb=ac.createGain(), fbLp=ac.createBiquadFilter();
   fbLp.type='lowpass'; fbLp.frequency.value=6000;
   const rSend=ac.createGain(), pre=ac.createDelay(1), conv=ac.createConvolver();
-  master.connect(vol);
-  master.connect(dSend); dSend.connect(delay); delay.connect(vol); delay.connect(fb); fb.connect(fbLp); fbLp.connect(delay);
-  master.connect(rSend); rSend.connect(pre); pre.connect(conv); conv.connect(vol);
+  // Ring modulator before delay + reverb (dry/wet crossfade into 'post')
+  const post=ac.createGain(), rmDry=ac.createGain(), rmVca=ac.createGain(), rmWet=ac.createGain(), rmOsc=ac.createOscillator();
+  rmVca.gain.value=0; rmOsc.type='sine'; rmOsc.connect(rmVca.gain); rmOsc.start();
+  master.connect(rmDry); rmDry.connect(post);
+  master.connect(rmVca); rmVca.connect(rmWet); rmWet.connect(post);
+  post.connect(vol);
+  post.connect(dSend); dSend.connect(delay); delay.connect(vol); delay.connect(fb); fb.connect(fbLp); fbLp.connect(delay);
+  post.connect(rSend); rSend.connect(pre); pre.connect(conv); conv.connect(vol);
   vol.connect(comp); comp.connect(pad); pad.connect(clip); clip.connect(an); an.connect(ac.destination);
-  nodes={master,comp,vol,an,dSend,delay,fb,rSend,pre,conv};
+  nodes={master,comp,vol,an,dSend,delay,fb,rSend,pre,conv,post,rmDry,rmWet,rmOsc};
+  applyFx('rmMix');applyFx('rmFreq');
   if(ac.audioWorklet&&window.AudioWorkletNode){
     try{
       const url=URL.createObjectURL(new Blob([GrainEngine.toString()+'\n'+PROC_SRC],{type:'application/javascript'}));
@@ -411,6 +425,8 @@ function applyFx(k){
   if(k==='dFb') nodes.fb.gain.setTargetAtTime(FXMAP.dFb(v),t,.03);
   if(k==='rPre') nodes.pre.delayTime.setTargetAtTime(FXMAP.rPre(v),t,.05);
   if(k==='rDecay') buildIR(false);
+  if(k==='rmFreq'&&nodes.rmOsc) nodes.rmOsc.frequency.setTargetAtTime(FXMAP.rmFreq(v),t,.02);
+  if(k==='rmMix'&&nodes.rmDry){ nodes.rmDry.gain.setTargetAtTime(Math.cos(v*Math.PI/2),t,.02); nodes.rmWet.gain.setTargetAtTime(Math.sin(v*Math.PI/2)*1.4,t,.02); }
 }
 function applyOut(k){
   if(!ac) return;
@@ -520,7 +536,7 @@ function toggleMute(i){
 });
 
 /* ---------- Knobs: drag up to turn clockwise ---------- */
-const KLBL={dRate:'DLY RATE',dFb:'DLY FBK',rPre:'REV PRE',rDecay:'REV DECAY'};
+const KLBL={dRate:'DLY RATE',dFb:'DLY FBK',rPre:'REV PRE',rDecay:'REV DECAY',rmMix:'RING MIX',rmFreq:'RING FREQ'};
 document.querySelectorAll('.knob').forEach(kn=>{
   const k=kn.dataset.fx, img=kn.querySelector('img');
   const render=()=>{const v=state.fx[k];img.style.transform=`rotate(${(v*270).toFixed(1)}deg)`;kn.setAttribute('aria-valuenow',v.toFixed(2));kn.setAttribute('aria-valuetext',FXFMT[k](v))};
@@ -578,7 +594,7 @@ function renderSheet(){
     g.innerHTML='<h3>Output</h3>';
     OUT.forEach(p=>g.appendChild(sliderRow('o-'+p.k,p.n,p,state.out[p.k],v=>{state.out[p.k]=v;applyOut(p.k)},v=>Math.round(v*100)+'%')));
     const note=document.createElement('p');note.className='note';
-    note.textContent='The four knobs set the delay and reverb character. These set how much of each is mixed in. Both samples play together through the same delay and reverb.';
+    note.textContent='The knobs on the main screen set the ring modulator (the record is mix, the gold knob is frequency) and the delay and reverb character. These set how much delay and reverb is mixed in. Both samples play together through the ring modulator, then the delay and reverb.';
     g.appendChild(note);body.appendChild(g);return;
   }
   const i=+tab;
