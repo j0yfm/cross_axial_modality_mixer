@@ -1,5 +1,5 @@
 // cross_axial_modality_mixer service worker: app files cached for offline use, fonts cached as they load.
-const VERSION = 'cross-axial-v3';
+const VERSION = 'cross-axial-v4';
 const APP = ['./', 'index.html', 'manifest.webmanifest', 'skin_bg.jpg', 'skin_mask.png', 'backdrop.jpg', 'backdrop_wide.jpg', 'wires.png', 'microsound_machine_01.wav', 'Primal_Dream.wav',
   'knob_rate.png', 'knob_fbk.png', 'knob_pre.png', 'knob_decay.png',
   'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'apple-touch-icon.png'];
@@ -19,7 +19,7 @@ self.addEventListener('fetch', e => {
   if (url.origin !== location.origin && !isFont) return;
   // Network first for the page itself so updates arrive; cache first for everything else.
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).then(r => { const c = r.clone(); caches.open(VERSION).then(ca => ca.put('index.html', c)); return r; })
+    e.respondWith(fetch(req, { cache: 'no-store' }).then(r => { const c = r.clone(); caches.open(VERSION).then(ca => ca.put('index.html', c)); return r; })
       .catch(() => caches.match('index.html')));
     return;
   }
